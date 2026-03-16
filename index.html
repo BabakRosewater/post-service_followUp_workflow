@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Service CRM Workflow Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Timeline Styles */
+        .timeline-item { position: relative; padding-left: 2rem; margin-bottom: 1.5rem; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: 0; top: 0.5rem;
+            width: 12px; height: 12px; border-radius: 50%; background: #3b82f6;
+            border: 2px solid #eff6ff;
+        }
+        .timeline-item::after {
+            content: ''; position: absolute; left: 5px; top: 1.5rem; bottom: -1rem;
+            width: 2px; background: #e2e8f0;
+        }
+        .timeline-item:last-child::after { display: none; }
+
+        /* TOC Active State */
+        .toc-link.active {
+            color: #2563eb;
+            font-weight: 600;
+            border-left-color: #2563eb;
+            background-color: #eff6ff;
+        }
+
+        /* Progress Bar */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 4px; background: #2563eb;
+            width: 0%; z-index: 1000; transition: width 0.1s;
+        }
+
+        .script-box {
+            background-image: linear-gradient(to right, #f8fafc, #f1f5f9);
+            border-left: 4px solid #8b5cf6;
+        }
+
+        /* UX Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Reading Progress -->
+    <div id="progress-bar"></div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">Post-Service CRM Workflow</h1>
+                <p class="text-sm text-slate-500">Service Experience + Open Recommendation Follow-Up</p>
+            </div>
+            <div class="hidden sm:block">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    Training Module
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
+        
+        <!-- Sidebar Navigation (Table of Contents) -->
+        <aside class="w-full md:w-64 flex-shrink-0 order-2 md:order-1 hidden md:block">
+            <div class="sticky top-24 bg-white rounded-xl shadow-sm border border-slate-200 p-4 max-h-[calc(100vh-8rem)] overflow-y-auto">
+                <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Contents</h3>
+                <nav id="toc" class="space-y-1 text-sm border-l-2 border-slate-100">
+                    <a href="#goals" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">1. Workflow Goals</a>
+                    <a href="#segments" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">2. Customer Segments</a>
+                    <a href="#statuses" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">3. CRM Statuses</a>
+                    <a href="#cadence" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">4. Timing Cadence</a>
+                    <a href="#logic" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">5. Workflow Logic</a>
+                    <a href="#sequence" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">6. Task Sequence</a>
+                    <a href="#structure" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">7. Conversation Structure</a>
+                    <a href="#presentation" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">8. Presenting Unsold Work</a>
+                    <a href="#notes" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">9. CRM Notes Format</a>
+                    <a href="#manager" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">10. Manager Review</a>
+                    <a href="#automation" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">11. Automation Rules</a>
+                    <a href="#pathways" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">12. Response Pathways</a>
+                    <a href="#scripts" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">13. Simple Scripts</a>
+                    <a href="#rules" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">14. Best Practices</a>
+                    <a href="#manual" class="toc-link block px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600 border-l-2 border-transparent -ml-[2px] rounded-r-md">16. Training Manual</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="w-full md:flex-1 lg:max-w-4xl order-1 md:order-2 space-y-12 pb-24">
+
+            <!-- Section 1 -->
+            <section id="goals" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">1. Workflow Goals</h2>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <p class="text-slate-600 mb-4">Each follow-up should help the advisor answer five crucial questions:</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-emerald-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>Was the customer <strong>satisfied</strong> with the visit?</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-emerald-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>Is there any <strong>unresolved concern</strong> from the original visit?</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-emerald-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>Did the completed repair <strong>solve the issue</strong>?</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-emerald-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>Are there <strong>unsold recommendations</strong> that still need attention?</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-emerald-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>Is there a <strong>next step</strong> we can help schedule?</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="segments" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">2. Segment Customers into 3 Post-Visit Buckets</h2>
+                <p class="text-slate-600 mb-6 font-medium">Do not treat every closed RO the same. A simple oil change follow-up should not look the same as a vehicle that left with 2mm brakes.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Bucket 1 -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm hover:-translate-y-1 hover:shadow-md transition duration-300">
+                        <div class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider inline-block mb-3">Bucket 1</div>
+                        <h3 class="font-bold text-lg mb-2 text-slate-900">Completed visit, no unsold work</h3>
+                        <p class="text-sm text-slate-700"><strong>Goal:</strong> Service experience follow-up and retention.</p>
+                    </div>
+                    <!-- Bucket 2 -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm hover:-translate-y-1 hover:shadow-md transition duration-300">
+                        <div class="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider inline-block mb-3">Bucket 2</div>
+                        <h3 class="font-bold text-lg mb-2 text-slate-900">Completed visit with unsold work</h3>
+                        <p class="text-sm text-slate-700"><strong>Goal:</strong> Service experience follow-up <em>plus</em> recovery of open work.</p>
+                    </div>
+                    <!-- Bucket 3 -->
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-5 shadow-sm hover:-translate-y-1 hover:shadow-md transition duration-300">
+                        <div class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider inline-block mb-3">Bucket 3</div>
+                        <h3 class="font-bold text-lg mb-2 text-slate-900">Urgent/Safety work declined</h3>
+                        <p class="text-sm text-slate-700"><strong>Goal:</strong> Higher-priority follow-up with stronger accountability and faster contact timing.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="statuses" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">3. CRM Statuses / Categories</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3 border-b pb-1">Main Process</h4>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2 py-1 bg-slate-100 border border-slate-300 rounded text-xs font-medium text-slate-700">Post-Service Follow-Up Open</span>
+                            <span class="px-2 py-1 bg-yellow-100 border border-yellow-300 rounded text-xs font-medium text-yellow-800">Waiting for Customer Response</span>
+                            <span class="px-2 py-1 bg-blue-100 border border-blue-300 rounded text-xs font-medium text-blue-800">Customer Reached</span>
+                            <span class="px-2 py-1 bg-green-100 border border-green-300 rounded text-xs font-medium text-green-800">Appointment Set</span>
+                            <span class="px-2 py-1 bg-gray-100 border border-gray-300 rounded text-xs font-medium text-gray-800">Follow-Up Complete</span>
+                            <span class="px-2 py-1 bg-red-100 border border-red-300 rounded text-xs font-medium text-red-800">Escalated / Manager Review</span>
+                        </div>
+
+                        <h4 class="font-semibold text-slate-800 mb-3 border-b pb-1">Recommendation Priority Tags</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-purple-100 border border-purple-300 rounded text-xs font-medium text-purple-800">Related</span>
+                            <span class="px-2 py-1 bg-red-100 border border-red-300 rounded text-xs font-medium text-red-800">Immediate</span>
+                            <span class="px-2 py-1 bg-teal-100 border border-teal-300 rounded text-xs font-medium text-teal-800">Maintenance</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3 border-b pb-1">Outcome Tags</h4>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>✅ Happy / No Issues</li>
+                            <li>❌ Issue Not Resolved</li>
+                            <li>⚠️ Experience Concern</li>
+                            <li>🔄 Declined Work – Interested</li>
+                            <li>⏳ Declined Work – Not Now</li>
+                            <li>🛑 Declined Work – No Interest</li>
+                            <li>👀 Safety Decline – Monitor</li>
+                            <li>📞 Could Not Reach</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4 & 6 Combined: Cadence and Task Sequence -->
+            <section id="cadence" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">4 & 6. Suggested Timing Cadence & Tasks</h2>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    
+                    <div class="timeline-item">
+                        <span class="font-bold text-blue-600">Day 1 after visit</span>
+                        <h4 class="font-semibold text-lg">Call (or Text/Email if no answer)</h4>
+                        <p class="text-sm text-slate-600 mt-1"><strong>Goal:</strong> Check experience and confirm repair outcome. Identify interest in open work.</p>
+                        <div class="bg-slate-50 p-3 mt-2 rounded border border-slate-200 text-sm">
+                            <strong>Outline:</strong> Thank them &rarr; Ask how vehicle is doing &rarr; Ask about experience &rarr; <em>(If unsold)</em> Mention only the most important item first &rarr; Offer help &rarr; Record outcome.
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <span class="font-bold text-blue-600">Day 3 after visit</span>
+                        <h4 class="font-semibold text-lg">Text or Email (Call for high-priority)</h4>
+                        <p class="text-sm text-slate-600 mt-1"><strong>Goal:</strong> Reconnect if no response and reintroduce unsold work naturally.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <span class="font-bold text-blue-600">Day 7 after visit</span>
+                        <h4 class="font-semibold text-lg">Call & Email Summary</h4>
+                        <p class="text-sm text-slate-600 mt-1"><strong>Goal:</strong> Final active attempt to connect and offer scheduling help. Email summary of unresolved recommendations.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <span class="font-bold text-blue-600">Day 14 after visit</span>
+                        <h4 class="font-semibold text-lg">Text/Email (Open Recommendations Only)</h4>
+                        <p class="text-sm text-slate-600 mt-1"><strong>Goal:</strong> Reminder and planning follow-up. Invite scheduling.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <span class="font-bold text-blue-600">Day 30 after visit</span>
+                        <h4 class="font-semibold text-lg">Personalized Contact (Maintenance/Large Work Only)</h4>
+                        <p class="text-sm text-slate-600 mt-1"><strong>Goal:</strong> Long-tail recovery attempt depending on urgency/value.</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="logic" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">5. The Workflow Logic</h2>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 bg-green-50 border border-green-200 p-5 rounded-xl">
+                        <h3 class="font-bold text-green-900 text-lg mb-3">Path A: No Unsold Work</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-green-800 text-sm">
+                            <li>Ask about visit experience</li>
+                            <li>Confirm vehicle is doing well</li>
+                            <li>Thank them</li>
+                            <li>Reinforce next maintenance timing</li>
+                            <li>Close workflow</li>
+                        </ol>
+                    </div>
+                    <div class="flex-1 bg-blue-50 border border-blue-200 p-5 rounded-xl">
+                        <h3 class="font-bold text-blue-900 text-lg mb-3">Path B: Unsold Recommendations</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-blue-800 text-sm">
+                            <li><strong>Experience:</strong> "Make sure everything went well."</li>
+                            <li><strong>Confirm:</strong> "How is the vehicle doing?"</li>
+                            <li><strong>Transition:</strong> "We noted a few items not completed..."</li>
+                            <li><strong>Structure (RIM):</strong> Related, Immediate, or Maintenance.</li>
+                            <li><strong>Ask:</strong> "Would you like help getting that taken care of?"</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 7 -->
+            <section id="structure" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">7. Advisor Conversation Structure</h2>
+                <p class="text-slate-600 mb-4">To keep the team consistent, give them this order every time:</p>
+                <div class="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 border-b border-slate-200">
+                        <div class="p-4 hover:bg-slate-50 transition">
+                            <div class="text-blue-500 font-bold text-xl mb-1">1</div>
+                            <h4 class="font-bold text-slate-800">Appreciation</h4>
+                            <p class="text-xs text-slate-500 mt-1">Thank them for the visit.</p>
+                        </div>
+                        <div class="p-4 hover:bg-slate-50 transition">
+                            <div class="text-blue-500 font-bold text-xl mb-1">2</div>
+                            <h4 class="font-bold text-slate-800">Experience check</h4>
+                            <p class="text-xs text-slate-500 mt-1">Ask how everything went.</p>
+                        </div>
+                        <div class="p-4 hover:bg-slate-50 transition">
+                            <div class="text-blue-500 font-bold text-xl mb-1">3</div>
+                            <h4 class="font-bold text-slate-800">Outcome check</h4>
+                            <p class="text-xs text-slate-500 mt-1">Confirm original concern was resolved.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200">
+                        <div class="p-4 hover:bg-slate-50 transition">
+                            <div class="text-blue-500 font-bold text-xl mb-1">4</div>
+                            <h4 class="font-bold text-slate-800">Open items review</h4>
+                            <p class="text-xs text-slate-500 mt-1">Discuss unsold work using facts.</p>
+                        </div>
+                        <div class="p-4 hover:bg-slate-50 transition">
+                            <div class="text-blue-500 font-bold text-xl mb-1">5</div>
+                            <h4 class="font-bold text-slate-800">Offer help</h4>
+                            <p class="text-xs text-slate-500 mt-1">Ask if they'd like to schedule.</p>
+                        </div>
+                        <div class="p-4 hover:bg-slate-50 transition">
+                            <div class="text-blue-500 font-bold text-xl mb-1">6</div>
+                            <h4 class="font-bold text-slate-800">Document outcome</h4>
+                            <p class="text-xs text-slate-500 mt-1">Record exact response & next step.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 8 -->
+            <section id="presentation" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">8. How to Present Unsold Work</h2>
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+                    <p class="text-red-700 font-medium">Important: Advisors should not dump all declined work back on the customer at once. Use this priority order.</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4">
+                        <div class="sm:w-32 flex-shrink-0">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold uppercase tracking-wide">Priority 1</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-900">Related</h4>
+                            <p class="text-sm text-slate-600 mb-2">Anything tied to why they came in.</p>
+                            <p class="text-sm italic text-slate-500">"Since this relates directly to the issue you originally came in for, I wanted to bring it back to your attention first."</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4">
+                        <div class="sm:w-32 flex-shrink-0">
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold uppercase tracking-wide">Priority 2</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-900">Immediate</h4>
+                            <p class="text-sm text-slate-600 mb-2">Anything safety-related or likely to worsen.</p>
+                            <p class="text-sm italic text-slate-500">"This was the most urgent item noted during your inspection because of its safety impact / risk of further damage."</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4">
+                        <div class="sm:w-32 flex-shrink-0">
+                            <span class="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-bold uppercase tracking-wide">Priority 3</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-900">Maintenance</h4>
+                            <p class="text-sm text-slate-600 mb-2">Routine items that protect long-term reliability.</p>
+                            <p class="text-sm italic text-slate-500">"This one was not urgent that day, but it is part of keeping the vehicle on schedule and preventing future issues."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 9 & 10 -->
+            <section id="notes" class="scroll-mt-24">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">9. CRM Notes Format</h2>
+                        <p class="text-sm text-slate-600 mb-3">Make note-taking structured so managers can review execution.</p>
+                        <div class="bg-slate-800 text-green-400 font-mono text-xs p-4 rounded-xl shadow-inner whitespace-pre-wrap">Post-Service Follow-Up Result
+
+Contact Date: 
+Contact Type: Call / Text / Email
+Reached Customer: Yes / No
+Vehicle Performing Properly: Yes / No
+Customer Experience Feedback: 
+Original Concern Resolved: Yes / No
+Open Recommendations Reviewed: 
+Priority Discussed: Related / Immediate / Maintenance
+Customer Response: 
+Appointment Offered: Yes / No
+Appointment Set: Yes / No
+Next Follow-Up Date: 
+Escalation Needed: Yes / No</div>
+                    </div>
+
+                    <div id="manager" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">10. Manager Review Standards</h2>
+                        <p class="text-sm text-slate-600 mb-3">Managers should review based on behavior, not just appointment count.</p>
+                        <ul class="space-y-3 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Made contact on time?</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Began with the service experience?</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Confirmed repair outcome?</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Presented unsold work using facts?</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Prioritized recommendation correctly?</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Asked for a next step?</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" onchange="toggleStrike(this)" class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer transition">
+                                    <span class="text-sm text-slate-700 transition-all duration-200 group-hover:text-slate-900">Documented outcome clearly?</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 11 & 12 -->
+            <section id="automation" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">11 & 12. Automation Rules & Pathways</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Automation Rules -->
+                    <div class="bg-white border border-slate-200 shadow-sm rounded-xl p-5">
+                        <h3 class="font-bold text-lg mb-4 text-slate-800">Trigger: RO Closes</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="bg-slate-50 p-3 rounded">
+                                <strong>If no unsold work:</strong><br>
+                                Auto-create Day 1 follow-up task. Close after successful contact.
+                            </li>
+                            <li class="bg-slate-50 p-3 rounded">
+                                <strong>If unsold work exists:</strong><br>
+                                Auto-create Day 1 call, Day 3 text/email, Day 7 call, Day 14 reminder, Day 30 reminder.
+                            </li>
+                            <li class="bg-red-50 p-3 rounded">
+                                <strong>If Immediate/Safety declined:</strong><br>
+                                Auto-flag High Priority, manager visibility, faster repeat attempt cadence.
+                            </li>
+                            <li class="bg-yellow-50 p-3 rounded">
+                                <strong>If customer dissatisfaction:</strong><br>
+                                Auto-flag Experience Concern, manager follow-up task within 24 hours.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Customer Response Pathways -->
+                    <div id="pathways" class="bg-white border border-slate-200 shadow-sm rounded-xl p-5">
+                        <h3 class="font-bold text-lg mb-4 text-slate-800">Customer Response Pathways</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="border-l-4 border-green-500 pl-3 py-1">
+                                <strong>Happy & Not interested now:</strong><br>
+                                Mark <em>Happy / Not Now</em>. Set future reminder based on recommendation type.
+                            </li>
+                            <li class="border-l-4 border-yellow-500 pl-3 py-1">
+                                <strong>Unhappy:</strong><br>
+                                Mark <em>Experience Concern</em>. Notify manager, create recovery follow-up.
+                            </li>
+                            <li class="border-l-4 border-red-500 pl-3 py-1">
+                                <strong>Issue still happening:</strong><br>
+                                Mark <em>Issue Not Resolved</em>. Escalate immediately. Priority callback/appt.
+                            </li>
+                            <li class="border-l-4 border-blue-500 pl-3 py-1">
+                                <strong>Wants to schedule:</strong><br>
+                                Mark <em>Appointment Set</em>. Convert to active service appointment.
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section 13 Scripts -->
+            <section id="scripts" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">13. Simple Scripts for the Team</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div class="script-box p-5 rounded-lg shadow-sm relative group transition-all duration-300 hover:shadow-md">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-slate-800">Experience-First Script</h4>
+                            <button onclick="copyScript(this)" class="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus:opacity-100 transition-opacity bg-white border border-slate-200 text-slate-600 hover:text-blue-600 text-xs px-2 py-1 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Copy script">Copy</button>
+                        </div>
+                        <p class="text-sm text-slate-700 italic script-content">"Hi [Name], I'm following up after your recent service visit to make sure everything went well and that your vehicle is doing well since you picked it up."</p>
+                    </div>
+
+                    <div class="script-box p-5 rounded-lg shadow-sm relative group transition-all duration-300 hover:shadow-md">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-slate-800">Experience + Unsold Work</h4>
+                            <button onclick="copyScript(this)" class="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus:opacity-100 transition-opacity bg-white border border-slate-200 text-slate-600 hover:text-blue-600 text-xs px-2 py-1 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Copy script">Copy</button>
+                        </div>
+                        <p class="text-sm text-slate-700 italic script-content">"I also wanted to follow up on one item we noted during your inspection that was not completed that day, just to make sure you had clear information and a plan if you want to move forward."</p>
+                    </div>
+
+                    <div class="script-box p-5 rounded-lg shadow-sm relative group transition-all duration-300 hover:shadow-md">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-slate-800">Safety-Related Script</h4>
+                            <button onclick="copyScript(this)" class="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus:opacity-100 transition-opacity bg-white border border-slate-200 text-slate-600 hover:text-blue-600 text-xs px-2 py-1 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Copy script">Copy</button>
+                        </div>
+                        <p class="text-sm text-slate-700 italic script-content">"I especially wanted to bring this back to your attention because it was one of the more immediate items noted during the inspection."</p>
+                    </div>
+
+                    <div class="script-box p-5 rounded-lg shadow-sm relative group transition-all duration-300 hover:shadow-md">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-slate-800">Maintenance-Related Script</h4>
+                            <button onclick="copyScript(this)" class="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus:opacity-100 transition-opacity bg-white border border-slate-200 text-slate-600 hover:text-blue-600 text-xs px-2 py-1 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Copy script">Copy</button>
+                        </div>
+                        <p class="text-sm text-slate-700 italic script-content">"This item was not urgent that day, but it is something we recommend based on your vehicle's mileage and service history."</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section 14 Best Practices -->
+            <section id="rules" class="scroll-mt-24">
+                <div class="bg-blue-600 text-white rounded-xl shadow-lg p-8 text-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10 transform scale-150 -translate-y-1/4 translate-x-1/4">
+                        <svg width="200" height="200" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-4 relative z-10">14. The Golden Rule</h2>
+                    <div class="text-xl md:text-3xl font-light mb-6 relative z-10">Never lead with the sale.</div>
+                    <p class="text-blue-100 font-medium tracking-wide uppercase text-sm mb-4 relative z-10">Lead with:</p>
+                    <div class="flex flex-wrap justify-center gap-4 relative z-10">
+                        <span class="bg-white/20 px-4 py-2 rounded-full font-semibold">Customer Experience</span>
+                        <span class="bg-white/20 px-4 py-2 rounded-full font-semibold">Vehicle Outcome</span>
+                        <span class="bg-white/20 px-4 py-2 rounded-full font-semibold">Facts</span>
+                        <span class="bg-white/20 px-4 py-2 rounded-full font-semibold">Next Step</span>
+                    </div>
+                    <p class="mt-6 text-blue-200 text-sm relative z-10">That keeps the process aligned with trust and professionalism.</p>
+                </div>
+            </section>
+
+            <!-- Section 16 Training Manual -->
+            <section id="manual" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-6">16. Training Manual Quick-Sheet</h2>
+                
+                <div class="bg-white border-2 border-slate-800 p-8 rounded-xl shadow-xl">
+                    <div class="text-center border-b-2 border-slate-200 pb-6 mb-6">
+                        <h1 class="text-3xl font-black text-slate-900 uppercase tracking-tight">Post-Service Follow-Up</h1>
+                        <h2 class="text-xl font-medium text-slate-600 mt-1">& Open Recommendation Workflow</h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="font-bold text-blue-600 uppercase tracking-wider text-sm mb-2">Objective</h3>
+                            <p class="text-slate-700">To create a structured post-visit follow-up process that strengthens customer trust, confirms satisfaction, verifies repair effectiveness, and re-engages customers on unsold recommendations using fact-based advising.</p>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-blue-600 uppercase tracking-wider text-sm mb-2">Process Standards</h3>
+                            <p class="text-slate-700 mb-2">Every closed RO enters a workflow. The advisor's first responsibility is to confirm the customer's experience and original visit outcome. If recommendations exist, review them using this priority:</p>
+                            <ul class="list-disc list-inside text-slate-700 ml-2 space-y-1">
+                                <li><strong>Related:</strong> Items connected directly to the original concern.</li>
+                                <li><strong>Immediate:</strong> Safety-related or damage-prevention items.</li>
+                                <li><strong>Maintenance:</strong> Routine services based on history and mileage.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="font-bold text-blue-600 uppercase tracking-wider text-sm mb-2">Follow-Up Timing</h3>
+                                <ul class="text-sm text-slate-700 space-y-1">
+                                    <li><strong>Day 1:</strong> Call/text to confirm satisfaction.</li>
+                                    <li><strong>Day 3:</strong> Follow-up on unanswered contacts.</li>
+                                    <li><strong>Day 7:</strong> Final active attempt.</li>
+                                    <li><strong>Day 14/30:</strong> Reminder cadence for open work.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-blue-600 uppercase tracking-wider text-sm mb-2">Advisor Expectations</h3>
+                                <ul class="text-sm text-slate-700 space-y-1">
+                                    <li>Begin with experience & outcome.</li>
+                                    <li>Present unsold work using facts/measurements.</li>
+                                    <li>Offer a next step, do not pressure.</li>
+                                    <li>Document result clearly in CRM.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 p-4 rounded text-center mt-6">
+                            <h3 class="font-bold text-slate-900 uppercase tracking-wider text-sm mb-1">Success Standard</h3>
+                            <p class="text-slate-700 italic">The goal is not simply to "sell declined work." The goal is to continue advising the customer professionally after the visit, using unshakable facts to build trust, protect the vehicle, and strengthen long-term retention.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-sm">
+        <p>Post-Service CRM Workflow Training Module</p>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="bttBtn" class="fixed bottom-6 right-6 bg-slate-800 text-white p-3 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:bg-slate-700 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 z-50" aria-label="Back to top">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Progress Bar
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('progress-bar').style.width = scrolled + '%';
+            });
+
+            // Intersection Observer for Table of Contents
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.toc-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        // Remove active class from all links
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                                // Scroll TOC to active element if needed
+                                const tocContainer = document.getElementById('toc').parentElement;
+                                const linkTop = link.offsetTop;
+                                if(linkTop > tocContainer.scrollTop + tocContainer.clientHeight - 50 || linkTop < tocContainer.scrollTop) {
+                                    tocContainer.scrollTop = linkTop - 50;
+                                }
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- NEW UX FEATURES ---
+
+            // 1. Scroll Reveal Animations
+            const revealElements = document.querySelectorAll('main section');
+            revealElements.forEach(el => el.classList.add('reveal'));
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
+            
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // 2. Back to Top Button Logic
+            const bttBtn = document.getElementById('bttBtn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    bttBtn.classList.remove('opacity-0', 'pointer-events-none');
+                    bttBtn.classList.add('opacity-100', 'pointer-events-auto');
+                } else {
+                    bttBtn.classList.add('opacity-0', 'pointer-events-none');
+                    bttBtn.classList.remove('opacity-100', 'pointer-events-auto');
+                }
+            });
+            bttBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // 3. Manager Review Interactive Checklist
+        function toggleStrike(checkbox) {
+            const textSpan = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                textSpan.classList.add('line-through', 'text-slate-400');
+                textSpan.classList.remove('text-slate-700', 'group-hover:text-slate-900');
+            } else {
+                textSpan.classList.remove('line-through', 'text-slate-400');
+                textSpan.classList.add('text-slate-700', 'group-hover:text-slate-900');
+            }
+        }
+
+        // 4. Copy Script to Clipboard
+        function copyScript(btn) {
+            const contentElement = btn.parentElement.nextElementSibling;
+            const textToCopy = contentElement.innerText || contentElement.textContent;
+            
+            // Create hidden text area for iFrame safe copying
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "absolute";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.classList.add('bg-green-50', 'text-green-600', 'border-green-200');
+                setTimeout(() => {
+                    btn.innerText = 'Copy';
+                    btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-200');
+                }, 2000);
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
