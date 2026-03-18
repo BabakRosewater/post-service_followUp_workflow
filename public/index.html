@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VinSolutions Post-Service Follow-Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Toast Animation */
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toast-exit {
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Nav Active State */
+        .nav-item.active {
+            background-color: #1e293b;
+            color: #38bdf8;
+            border-left: 4px solid #38bdf8;
+        }
+        
+        .tab-btn.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl z-20 flex-shrink-0 transition-transform duration-300 hidden md:flex">
+        <div class="p-6 border-b border-slate-800">
+            <h1 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                Service Recovery
+            </h1>
+            <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">VinSolutions Playbook</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="navigate('overview')" id="nav-overview" class="nav-item active w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                        Overview & Segments
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('cadence')" id="nav-cadence" class="nav-item w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Task Cadence (Paths)
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('advisors')" id="nav-advisors" class="nav-item w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                        Advisor Playbook
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('crm')" id="nav-crm" class="nav-item w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        VinSolutions Setup
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('templates')" id="nav-templates" class="nav-item w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Email Templates
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('managers')" id="nav-managers" class="nav-item w-full text-left px-6 py-3 flex items-center gap-3 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Management Review
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Mobile Nav Header -->
+    <div class="md:hidden fixed top-0 w-full bg-slate-900 text-white p-4 flex justify-between items-center z-30 shadow-md">
+        <h1 class="text-lg font-bold flex items-center gap-2">
+            <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            Service Recovery
+        </h1>
+        <select id="mobile-nav" onchange="navigate(this.value)" class="bg-slate-800 text-white border-none rounded p-2 text-sm focus:ring-2 focus:ring-sky-400 outline-none">
+            <option value="overview">Overview</option>
+            <option value="cadence">Task Cadence</option>
+            <option value="advisors">Advisor Playbook</option>
+            <option value="crm">VinSolutions Setup</option>
+            <option value="templates">Email Templates</option>
+            <option value="managers">Management Review</option>
+        </select>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-full overflow-y-auto pt-16 md:pt-0 bg-slate-50 relative">
+        <div class="max-w-6xl mx-auto p-6 md:p-10 pb-24">
+
+            <!-- SECTION: OVERVIEW -->
+            <section id="section-overview" class="content-section animate-fade-in block">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Objectives & Strategy</h2>
+                    <p class="text-slate-500 mt-2">The core principles and customer segments for post-service follow-up.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 border-t-4 border-t-blue-500">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            The Objective
+                        </h3>
+                        <ul class="space-y-2 text-slate-600 text-sm">
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">•</span> Confirms the customer’s experience after the visit.</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">•</span> Verifies the original concern was resolved.</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">•</span> Identifies any unresolved issues quickly.</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">•</span> Recovers unsold recommendations professionally.</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">•</span> Creates a clear next step for the customer.</li>
+                            <li class="flex items-start gap-2"><span class="text-blue-500 font-bold">•</span> Strengthens retention through trust and fact-based follow-up.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 border-t-4 border-t-red-500">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            Core Principle
+                        </h3>
+                        <div class="bg-red-50 text-red-800 p-4 rounded-lg font-semibold mb-4 text-center">
+                            Never lead with the sale.
+                        </div>
+                        <p class="text-sm text-slate-600 font-medium mb-2">Lead with:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold">Customer Experience</span>
+                            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold">Vehicle Outcome</span>
+                            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold">Facts</span>
+                            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold">Next Step</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 italic">The goal is to continue advising professionally after the visit to build trust and protect the vehicle.</p>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold text-slate-800 mb-4">Customer Segmentation</h3>
+                <p class="text-sm text-slate-600 mb-6">Do not treat every closed RO the same. Separate customers into 3 post-visit buckets.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Bucket 1 -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-lg mb-1">Bucket 1</h4>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Completed, No Unsold Work</p>
+                        <div class="text-sm text-slate-600">
+                            <strong>Goal:</strong> Service experience follow-up, confirm vehicle is doing well, reinforce retention, close process.
+                        </div>
+                    </div>
+                    <!-- Bucket 2 -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-lg mb-1">Bucket 2</h4>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Completed, Unsold Work</p>
+                        <div class="text-sm text-slate-600">
+                            <strong>Goal:</strong> Service experience follow-up plus recovery of open work through a structured, low-pressure process.
+                        </div>
+                    </div>
+                    <!-- Bucket 3 -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-lg mb-1">Bucket 3</h4>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Urgent/Safety Declined</p>
+                        <div class="text-sm text-slate-600">
+                            <strong>Goal:</strong> Higher-priority follow-up with faster timing, stronger accountability, and manager visibility when needed.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: CADENCE -->
+            <section id="section-cadence" class="content-section hidden animate-fade-in block">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Follow-Up Timing / Task Cadence</h2>
+                    <p class="text-slate-500 mt-2">Select a path below to view the daily task sequence.</p>
+                </header>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                    <button onclick="switchTab('pathA')" id="tab-pathA" class="tab-btn active px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap">
+                        PATH A: No Unsold Work
+                    </button>
+                    <button onclick="switchTab('pathB')" id="tab-pathB" class="tab-btn px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap">
+                        PATH B: Unsold Work Exists
+                    </button>
+                    <button onclick="switchTab('pathC')" id="tab-pathC" class="tab-btn px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 whitespace-nowrap">
+                        PATH C: Urgent / Safety
+                    </button>
+                </div>
+
+                <!-- Path A Content -->
+                <div id="content-pathA" class="cadence-content">
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-green-500"></div>
+                        <div class="ml-4">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">Day 1</span>
+                            </div>
+                            <p class="font-semibold text-slate-800 mb-2">Task: Phone Call</p>
+                            <p class="text-sm text-slate-600 mb-4">If no answer: leave voicemail and send follow-up text or email.</p>
+                            
+                            <div class="bg-slate-50 rounded p-4 text-sm text-slate-700 border border-slate-100 mb-4">
+                                <strong class="text-slate-900">Goal:</strong> Confirm satisfaction, confirm repair outcome, thank customer.
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-green-50 rounded p-4 border border-green-100">
+                                    <p class="text-xs font-bold text-green-800 uppercase mb-1">If reached and no issues:</p>
+                                    <p class="text-sm text-slate-700">Set Status = <span class="bg-white px-2 py-1 rounded border shadow-sm mx-1 font-mono text-xs">Happy / No Issues</span><br>Then close process.</p>
+                                </div>
+                                <div class="bg-red-50 rounded p-4 border border-red-100">
+                                    <p class="text-xs font-bold text-red-800 uppercase mb-1">If issue exists:</p>
+                                    <p class="text-sm text-slate-700">Set Status = <span class="bg-white px-2 py-1 rounded border shadow-sm mx-1 font-mono text-xs">Issue Not Resolved</span> or <span class="bg-white px-2 py-1 rounded border shadow-sm mx-1 font-mono text-xs">Experience Concern</span><br>Escalate immediately.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Path B Content -->
+                <div id="content-pathB" class="cadence-content hidden">
+                    <div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                        
+                        <!-- Day 1 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-blue-100 text-blue-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <span class="font-bold text-sm">D1</span>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-1">Task: Call</h4>
+                                <p class="text-xs text-slate-500 mb-3">If no answer: voicemail + text + email</p>
+                                <ul class="text-sm text-slate-600 space-y-1 mb-3 list-disc pl-4">
+                                    <li>Thank customer</li>
+                                    <li>Confirm vehicle is doing well</li>
+                                    <li>Ask about service experience</li>
+                                    <li>Mention only the <em>most important</em> open recommendation first</li>
+                                    <li>Offer help scheduling</li>
+                                </ul>
+                                <p class="text-xs font-semibold text-slate-500 mt-2">Update Status after contact appropriately.</p>
+                            </div>
+                        </div>
+
+                        <!-- Day 3 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <span class="font-bold text-sm">D3</span>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-1">Task: Text Follow-up</h4>
+                                <p class="text-xs text-slate-500 mb-3">Additional call ONLY if high-priority or safety item.</p>
+                                <p class="text-sm text-slate-600"><strong>Goal:</strong> Reconnect naturally and reintroduce the open item without pressure.</p>
+                            </div>
+                        </div>
+
+                        <!-- Day 7 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <span class="font-bold text-sm">D7</span>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-1">Task: Call/Voicemail + Email</h4>
+                                <p class="text-sm text-slate-600 mb-2"><strong>Goal:</strong> Final active follow-up for the first week.</p>
+                                <p class="text-sm text-slate-600">Summarize open recommendation and offer scheduling help.</p>
+                            </div>
+                        </div>
+
+                        <!-- Day 14 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <span class="font-bold text-sm">D14</span>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-1">Task: Text or Email</h4>
+                                <p class="text-sm text-slate-600"><strong>Goal:</strong> Reminder and planning follow-up for open work only.</p>
+                            </div>
+                        </div>
+
+                        <!-- Day 30 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <span class="font-bold text-sm">D30</span>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-1">Task: Text or Email</h4>
+                                <p class="text-sm text-slate-600"><strong>Goal:</strong> Long-tail recovery attempt for larger recommendations or pending maintenance items only.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Path C Content -->
+                <div id="content-pathC" class="cadence-content hidden">
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-6 shadow-sm mb-6">
+                        <div class="flex items-center gap-2 mb-2 text-red-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <h3 class="font-bold">Manager Review Recommended If:</h3>
+                        </div>
+                        <ul class="list-disc pl-5 text-sm text-red-900 space-y-1">
+                            <li>No response after multiple attempts</li>
+                            <li>Safety concern is significant</li>
+                            <li>Customer expresses uncertainty or dissatisfaction</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm border-t-4 border-t-orange-500 relative">
+                            <span class="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">Day 1</span>
+                            <h4 class="font-bold text-slate-800 mt-2 mb-2">Call First</h4>
+                            <p class="text-sm text-slate-600">If no answer: voicemail + text + email.</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm border-t-4 border-t-orange-500 relative">
+                            <span class="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">Day 3</span>
+                            <h4 class="font-bold text-slate-800 mt-2 mb-2">Call Again</h4>
+                            <p class="text-sm text-slate-600">Because item is safety-related or likely to worsen.</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm border-t-4 border-t-orange-500 relative">
+                            <span class="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">Day 7</span>
+                            <h4 class="font-bold text-slate-800 mt-2 mb-2">Call + Email</h4>
+                            <p class="text-sm text-slate-600">Summary email outlining safety risk.</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm border-t-4 border-t-orange-500 relative">
+                            <span class="absolute -top-3 left-4 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">Day 14</span>
+                            <h4 class="font-bold text-slate-800 mt-2 mb-2">Text or Email</h4>
+                            <p class="text-sm text-slate-600">Reminder if still open. Escalate to manager if appropriate.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: ADVISOR PLAYBOOK -->
+            <section id="section-advisors" class="content-section hidden animate-fade-in block">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Advisor Playbook</h2>
+                    <p class="text-slate-500 mt-2">Guidelines for conversation structure and presenting unsold work.</p>
+                </header>
+
+                <div class="bg-slate-900 rounded-xl p-6 text-white mb-8 shadow-lg">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                        The 6-Step Conversation Order
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                            <span class="text-sky-400 font-black text-2xl opacity-50 block mb-1">01</span>
+                            <h4 class="font-bold mb-1">Appreciation</h4>
+                            <p class="text-sm text-slate-300">Thank them for the visit.</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                            <span class="text-sky-400 font-black text-2xl opacity-50 block mb-1">02</span>
+                            <h4 class="font-bold mb-1">Experience Check</h4>
+                            <p class="text-sm text-slate-300">Ask how everything went.</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                            <span class="text-sky-400 font-black text-2xl opacity-50 block mb-1">03</span>
+                            <h4 class="font-bold mb-1">Outcome Check</h4>
+                            <p class="text-sm text-slate-300">Confirm the vehicle is doing well and original concern was addressed.</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                            <span class="text-sky-400 font-black text-2xl opacity-50 block mb-1">04</span>
+                            <h4 class="font-bold mb-1">Open Item Review</h4>
+                            <p class="text-sm text-slate-300">If recommendations remain, discuss them using facts.</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                            <span class="text-sky-400 font-black text-2xl opacity-50 block mb-1">05</span>
+                            <h4 class="font-bold mb-1">Offer Help</h4>
+                            <p class="text-sm text-slate-300">Ask whether they would like help scheduling.</p>
+                        </div>
+                        <div class="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                            <span class="text-sky-400 font-black text-2xl opacity-50 block mb-1">06</span>
+                            <h4 class="font-bold mb-1">Document Outcome</h4>
+                            <p class="text-sm text-slate-300">Record exact result and next step in VinSolutions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">How to Present Unsold Work</h3>
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6">
+                    <p class="text-sm text-amber-800 font-medium"><strong>Important:</strong> Do not dump every declined item on the customer at once. Use this priority order.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Priority 1 -->
+                    <div class="bg-white border border-slate-200 rounded-lg p-5 flex flex-col md:flex-row gap-4 items-start shadow-sm">
+                        <div class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded text-sm whitespace-nowrap">PRIORITY 1</div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">Related</h4>
+                            <p class="text-sm text-slate-600 mb-2">Anything connected directly to the reason they came in.</p>
+                            <div class="bg-slate-50 p-3 rounded italic text-sm text-slate-700 border border-slate-200 relative">
+                                <span class="absolute top-2 left-2 text-slate-300">"</span>
+                                <span class="pl-4 block">Since this relates directly to the concern you originally came in for, I wanted to bring this back to your attention first.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Priority 2 -->
+                    <div class="bg-white border border-slate-200 rounded-lg p-5 flex flex-col md:flex-row gap-4 items-start shadow-sm">
+                        <div class="bg-red-100 text-red-800 font-bold px-3 py-1 rounded text-sm whitespace-nowrap">PRIORITY 2</div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">Immediate</h4>
+                            <p class="text-sm text-slate-600 mb-2">Safety-related items or items likely to worsen or create additional damage.</p>
+                            <div class="bg-slate-50 p-3 rounded italic text-sm text-slate-700 border border-slate-200 relative">
+                                <span class="absolute top-2 left-2 text-slate-300">"</span>
+                                <span class="pl-4 block">This was the most urgent item noted during your inspection because of its safety impact or the potential for more damage if it is delayed.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Priority 3 -->
+                    <div class="bg-white border border-slate-200 rounded-lg p-5 flex flex-col md:flex-row gap-4 items-start shadow-sm">
+                        <div class="bg-green-100 text-green-800 font-bold px-3 py-1 rounded text-sm whitespace-nowrap">PRIORITY 3</div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">Maintenance</h4>
+                            <p class="text-sm text-slate-600 mb-2">Routine services that protect long-term reliability.</p>
+                            <div class="bg-slate-50 p-3 rounded italic text-sm text-slate-700 border border-slate-200 relative">
+                                <span class="absolute top-2 left-2 text-slate-300">"</span>
+                                <span class="pl-4 block">This one was not urgent that day, but it is part of keeping the vehicle on schedule and helping prevent future issues.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: CRM & VINSOLUTIONS -->
+            <section id="section-crm" class="content-section hidden animate-fade-in block">
+                <header class="mb-8 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-800">VinSolutions Setup & Logic</h2>
+                        <p class="text-slate-500 mt-2">Statuses, automation rules, and logging formats.</p>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Statuses -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Process Structure</h3>
+                        <p class="text-sm mb-3"><strong>Process Name:</strong> <span class="bg-slate-100 px-2 py-1 rounded text-blue-700 font-mono text-xs">Post-Service Follow-Up</span></p>
+                        <h4 class="text-sm font-bold text-slate-700 mb-2">Statuses / Steps:</h4>
+                        <ul class="text-sm text-slate-600 space-y-1 mb-4 grid grid-cols-2 gap-x-2">
+                            <li>• Post-Service Follow-Up Open</li>
+                            <li>• Waiting for Customer Response</li>
+                            <li>• Customer Reached</li>
+                            <li>• Appointment Set</li>
+                            <li>• Happy / No Issues</li>
+                            <li>• Declined Work – Interested</li>
+                            <li>• Declined Work – Not Ready</li>
+                            <li>• Issue Not Resolved</li>
+                            <li>• Experience Concern</li>
+                            <li>• Closed – Complete</li>
+                        </ul>
+                        <h4 class="text-sm font-bold text-slate-700 mb-2">Outcome Tags:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-green-50 text-green-700 border border-green-200 px-2 py-1 text-xs rounded">Happy / No Issues</span>
+                            <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 text-xs rounded">Declined Work - Interested</span>
+                            <span class="bg-slate-100 text-slate-700 border border-slate-200 px-2 py-1 text-xs rounded">Declined Work - Not Ready</span>
+                            <span class="bg-purple-50 text-purple-700 border border-purple-200 px-2 py-1 text-xs rounded">Appointment Set</span>
+                            <span class="bg-red-50 text-red-700 border border-red-200 px-2 py-1 text-xs rounded">Issue Not Resolved</span>
+                            <span class="bg-orange-50 text-orange-700 border border-orange-200 px-2 py-1 text-xs rounded">Experience Concern</span>
+                            <span class="bg-slate-100 text-slate-500 border border-slate-200 px-2 py-1 text-xs rounded">No Response</span>
+                        </div>
+                    </div>
+
+                    <!-- Note Template -->
+                    <div class="bg-slate-900 rounded-xl shadow-lg border border-slate-800 p-6 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-white">CRM Notes Format</h3>
+                            <button onclick="copyElementText('crm-note-template', this)" class="text-xs bg-slate-700 hover:bg-sky-500 text-white px-3 py-1 rounded transition-colors flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Copy Format
+                            </button>
+                        </div>
+                        <div id="crm-note-template" class="bg-slate-800 text-sky-100 p-4 rounded text-sm font-mono whitespace-pre-wrap flex-1 overflow-y-auto border border-slate-700">Post-Service Follow-Up Result
+Contact Date: 
+Contact Type: Call / Text / Email
+Reached Customer: Yes / No
+Vehicle Performing Properly: Yes / No
+Customer Experience Feedback: 
+Original Concern Resolved: Yes / No
+
+Open Recommendations Reviewed: 
+Priority Discussed: Related / Immediate / Maintenance
+Customer Response: 
+Appointment Offered: Yes / No
+Appointment Set: Yes / No
+Next Follow-Up Date: 
+
+Escalation Needed: Yes / No
+Manager Notified: Yes / No</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Automation Rules (If/Then)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b">
+                                <tr>
+                                    <th class="px-4 py-3 w-1/3">Condition (IF)</th>
+                                    <th class="px-4 py-3">Action (THEN)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-slate-900 bg-slate-50">No unsold work</td>
+                                    <td class="px-4 py-3">Create Day 1 follow-up task only. If reached & satisfied, close process.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-slate-900 bg-slate-50">Unsold work exists</td>
+                                    <td class="px-4 py-3">Create cadence: Day 1 (Call), Day 3 (Text/Email), Day 7 (Call+Email), Day 14 (Reminder), Day 30 (Reminder if large).</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-red-700 bg-red-50">Safety/Immediate item declined</td>
+                                    <td class="px-4 py-3">Apply High Priority tag. Day 3 becomes a Call (not text). Add manager visibility. Keep open until outcome clear.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-orange-700 bg-orange-50">Customer reports dissatisfaction</td>
+                                    <td class="px-4 py-3">Change status to <strong>Experience Concern</strong>. Create manager follow-up task within 24 hours.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-red-700 bg-red-50">Repair did not solve issue</td>
+                                    <td class="px-4 py-3">Change status to <strong>Issue Not Resolved</strong>. Create priority callback/appt task. Notify manager/director.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-green-700 bg-green-50">Customer wants to schedule</td>
+                                    <td class="px-4 py-3">Change status to <strong>Appointment Set</strong>. Convert to active service appointment follow-up.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: EMAIL TEMPLATES -->
+            <section id="section-templates" class="content-section hidden animate-fade-in block">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Email Templates</h2>
+                    <p class="text-slate-500 mt-2">Plain-text templates for use in VinSolutions. Click to copy.</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Email 1 -->
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-slate-800">Email 1: Day 1 Check-In</h3>
+                                <p class="text-xs text-slate-500">Use for: all customers (esp. no answer on Day 1)</p>
+                            </div>
+                            <button onclick="copyElementText('email-1', this)" class="text-xs bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">
+                                Copy
+                            </button>
+                        </div>
+                        <div class="p-4 bg-slate-100 text-xs border-b border-slate-200 font-mono text-slate-600">
+                            <strong>Subject:</strong> Thank you for your visit
+                        </div>
+                        <div id="email-1" class="p-5 text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed flex-1">Hi [Customer Name],
+
+Thank you for coming in to see us. I wanted to personally check in and make sure your vehicle is doing well after your recent visit and that your experience with our team went smoothly.
+
+If you have any questions about the work completed, or if there is anything that does not feel quite right, please reply to this email or give me a call. I am happy to help.
+
+[If unsold work exists, add:]
+We also noted [Unsold Item] during your inspection. I just wanted to make sure you had that information for your planning. If you would like, I can help you get that scheduled.
+
+Thank you again,
+
+[Advisor Name]
+[Dealership Name]
+[Phone Number]</div>
+                    </div>
+
+                    <!-- Email 2 -->
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-slate-800">Email 2: Day 1 (Open Recs)</h3>
+                                <p class="text-xs text-slate-500">Use for: completed visit with unsold work</p>
+                            </div>
+                            <button onclick="copyElementText('email-2', this)" class="text-xs bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">
+                                Copy
+                            </button>
+                        </div>
+                        <div class="p-4 bg-slate-100 text-xs border-b border-slate-200 font-mono text-slate-600">
+                            <strong>Subject:</strong> Checking in on your vehicle
+                        </div>
+                        <div id="email-2" class="p-5 text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed flex-1">Hi [Customer Name],
+
+Thank you again for trusting us with your vehicle. I wanted to follow up after your visit to make sure everything is going well and that the original reason for your visit has been taken care of.
+
+During your inspection, we also noted [Unsold Item]. I wanted to make sure you had that information for your records and for future planning.
+
+There is no pressure at all. My goal is simply to make sure you have the information you need and to help when you are ready. If you would like to get that taken care of, just reply to this email and I can help arrange the next step.
+
+Thank you,
+
+[Advisor Name]
+[Dealership Name]
+[Phone Number]</div>
+                    </div>
+
+                    <!-- Email 3 -->
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-slate-800">Email 3: Day 7 Summary</h3>
+                                <p class="text-xs text-slate-500">Use for: final active follow-up during week 1</p>
+                            </div>
+                            <button onclick="copyElementText('email-3', this)" class="text-xs bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">
+                                Copy
+                            </button>
+                        </div>
+                        <div class="p-4 bg-slate-100 text-xs border-b border-slate-200 font-mono text-slate-600">
+                            <strong>Subject:</strong> Your service follow-up and recommendations
+                        </div>
+                        <div id="email-3" class="p-5 text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed flex-1">Hi [Customer Name],
+
+I wanted to send a quick follow-up after your recent visit. I hope your vehicle has been doing well and that everything from your service visit went smoothly.
+
+I also wanted to summarize the open recommendation we discussed:
+
+Open recommendation: [Unsold Item]
+
+This item was noted during your inspection, and I wanted to make sure you still had that information available. If you would like to take care of it, I would be glad to help you schedule a time that works for you.
+
+Please let me know if you have any questions or if there is anything else we can help with.
+
+Best,
+
+[Advisor Name]
+[Dealership Name]
+[Phone Number]</div>
+                    </div>
+
+                    <!-- Email 4 -->
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-slate-800">Email 4: Day 14 Planning</h3>
+                                <p class="text-xs text-slate-500">Use for: open recommendations still not scheduled</p>
+                            </div>
+                            <button onclick="copyElementText('email-4', this)" class="text-xs bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">
+                                Copy
+                            </button>
+                        </div>
+                        <div class="p-4 bg-slate-100 text-xs border-b border-slate-200 font-mono text-slate-600">
+                            <strong>Subject:</strong> Planning ahead for your vehicle
+                        </div>
+                        <div id="email-4" class="p-5 text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed flex-1">Hi [Customer Name],
+
+I wanted to follow up regarding the [Unsold Item] we discussed during your last visit.
+
+This is simply a reminder for your planning. If you are ready to get it taken care of, I would be glad to help you set up an appointment. If now is not the right time, that is perfectly okay too.
+
+My goal is to make sure you have the information you need and know we are here when you are ready.
+
+Thank you,
+
+[Advisor Name]
+[Dealership Name]
+[Phone Number]</div>
+                    </div>
+
+                    <!-- Email 5 -->
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                        <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-slate-800">Email 5: Day 30 Long-Tail</h3>
+                                <p class="text-xs text-slate-500">Use for: larger work or pending maintenance</p>
+                            </div>
+                            <button onclick="copyElementText('email-5', this)" class="text-xs bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">
+                                Copy
+                            </button>
+                        </div>
+                        <div class="p-4 bg-slate-100 text-xs border-b border-slate-200 font-mono text-slate-600">
+                            <strong>Subject:</strong> Checking back in on your vehicle
+                        </div>
+                        <div id="email-5" class="p-5 text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed flex-1">Hi [Customer Name],
+
+I hope you are doing well. I was reviewing my notes and saw that the recommendation for [Unsold Item] is still open from your recent visit.
+
+I wanted to check back in and see whether you would like help getting that taken care of. Addressing it can help protect the reliability and long-term condition of your vehicle.
+
+Whenever you are ready, just reply to this email and I will be happy to help with scheduling.
+
+Best regards,
+
+[Advisor Name]
+[Dealership Name]
+[Phone Number]</div>
+                    </div>
+
+                    <!-- Email 6 & 7 (Escalations) -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-orange-50 border border-orange-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                            <div class="bg-orange-100 border-b border-orange-200 p-4 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-orange-900">Email 6: Experience Concern</h3>
+                                </div>
+                                <button onclick="copyElementText('email-6', this)" class="text-xs bg-white border border-orange-300 hover:bg-orange-50 text-orange-800 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">Copy</button>
+                            </div>
+                            <div class="p-3 bg-orange-50/50 text-xs border-b border-orange-200 font-mono text-orange-800"><strong>Subject:</strong> I wanted to follow up with you personally</div>
+                            <div id="email-6" class="p-4 text-sm text-orange-900 whitespace-pre-wrap font-sans">Hi [Customer Name],
+
+I wanted to personally follow up regarding your recent visit.
+
+I understand that your experience may not have gone the way it should have, and I appreciate the opportunity to learn more. Your feedback matters to us, and we take it seriously.
+
+Please reply to this email or contact me directly when you have a moment. I would appreciate the opportunity to better understand what happened and see how we can help make it right.
+
+Sincerely,
+[Manager Name]</div>
+                        </div>
+
+                        <div class="bg-red-50 border border-red-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                            <div class="bg-red-100 border-b border-red-200 p-4 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-red-900">Email 7: Issue Not Resolved</h3>
+                                </div>
+                                <button onclick="copyElementText('email-7', this)" class="text-xs bg-white border border-red-300 hover:bg-red-50 text-red-800 px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm">Copy</button>
+                            </div>
+                            <div class="p-3 bg-red-50/50 text-xs border-b border-red-200 font-mono text-red-800"><strong>Subject:</strong> Let's help get this resolved</div>
+                            <div id="email-7" class="p-4 text-sm text-red-900 whitespace-pre-wrap font-sans">Hi [Customer Name],
+
+Thank you for letting us know that the concern with your vehicle may still be present.
+
+I am sorry to hear that the issue may not have been fully resolved. I would like to help get the vehicle back in so we can review it with you and work toward a solution as quickly as possible.
+
+Please reply to this email or call me directly, and I will help arrange the next step.
+
+Thank you,
+[Advisor Name]</div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION: MANAGER REVIEW -->
+            <section id="section-managers" class="content-section hidden animate-fade-in block">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Manager Review Standard</h2>
+                    <p class="text-slate-500 mt-2">Managers should review behavior, not just appointments.</p>
+                </header>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 max-w-3xl mx-auto">
+                    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                        <div class="w-16 h-16 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800">Quality Assurance Checklist</h3>
+                            <p class="text-sm text-slate-500">Use this to evaluate advisor notes and call recordings.</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Was contact made on time?</strong>
+                                <span class="text-sm text-slate-500">Check cadence adherence (Day 1, 3, 7, etc.).</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Did the advisor begin with the service experience?</strong>
+                                <span class="text-sm text-slate-500">Should never lead with the sale.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Did the advisor confirm repair outcome?</strong>
+                                <span class="text-sm text-slate-500">Ensured original concern was actually fixed.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Was unsold work presented using facts?</strong>
+                                <span class="text-sm text-slate-500">No high-pressure sales tactics.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Was the correct priority used?</strong>
+                                <span class="text-sm text-slate-500">Focus on Related > Immediate > Maintenance.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Did the advisor ask for a next step?</strong>
+                                <span class="text-sm text-slate-500">Offered help scheduling or set future reminder.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Was the CRM note complete and clear?</strong>
+                                <span class="text-sm text-slate-500">Used the standard VinSolutions note format.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <input type="checkbox" class="mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <strong class="text-slate-800 block">Were escalations handled quickly?</strong>
+                                <span class="text-sm text-slate-500">Dissatisfaction or unresolved concerns sent to mgmt immediately.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 toast-exit z-50">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span class="text-sm font-medium">Copied to clipboard!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Navigation Logic
+        function navigate(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show target section
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+            
+            // Update Desktop Nav
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            const desktopNav = document.getElementById('nav-' + sectionId);
+            if(desktopNav) desktopNav.classList.add('active');
+
+            // Update Mobile Nav
+            document.getElementById('mobile-nav').value = sectionId;
+
+            // Scroll to top
+            document.querySelector('main').scrollTo(0,0);
+        }
+
+        // Tab Switching Logic (Cadence Section)
+        function switchTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('.cadence-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show target content
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            
+            // Update Tab Styles
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'border-blue-600', 'text-blue-600', 'font-semibold');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId);
+            activeBtn.classList.add('active');
+        }
+
+        // Copy to Clipboard Logic with Custom Toast (No alerts)
+        function copyElementText(elementId, btnElement) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            // Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast();
+                    btnFeedback(btnElement);
+                });
+            } else {
+                // Fallback for older browsers / some CodePen iframe configs
+                let textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                    btnFeedback(btnElement);
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
+                textArea.remove();
+            }
+        }
+
+        function btnFeedback(btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!`;
+            btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
+            btn.classList.remove('bg-white', 'text-slate-700', 'hover:bg-slate-100');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
+                btn.classList.add('bg-white', 'text-slate-700', 'hover:bg-slate-100');
+            }, 2000);
+        }
+
+        let toastTimeout;
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('toast-exit');
+            toast.classList.add('toast-enter-active');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('toast-enter-active');
+                toast.classList.add('toast-exit');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
